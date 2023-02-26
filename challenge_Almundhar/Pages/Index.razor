@@ -1,0 +1,172 @@
+﻿@page "/"
+@using System.Globalization;
+@inject DB DB;
+<PageTitle>Index</PageTitle>
+
+<head>
+	<title>Student Statistics</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f2f2f2;
+			
+		}
+
+		h1 {
+			text-align: center;
+			margin-bottom: 30px;
+		}
+
+		table {
+			margin: 0 auto;
+			border-collapse: collapse;
+			width: 80%;
+			background-color: #fff;
+			box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+		}
+
+		th, td {
+			text-align: center;
+			padding: 10px;
+			border: 1px solid #ddd;
+		}
+
+		th {
+			background-color: #000;
+			color: gold;
+			font-weight: normal;
+			font-size: 18px;
+			
+		}
+
+		td {
+			font-size: 16px;
+			background-color: #EDE4E3
+		}
+	</style>
+</head>
+<body>
+	<h1>Student Statistics</h1>
+	<table>
+		<thead>
+			<tr>
+				<th>Class</th>
+				<th>Number of Students</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Class A</td>
+				<td>@classANunber</td>
+			</tr>
+			<tr>
+				<td>Class B</td>
+				<td>@classBNunber</td>
+			</tr>
+			<tr>
+				<td>Class C</td>
+				<td>@classCNunber</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<table>
+		<thead>
+			<tr>
+				<th>Country</th>
+				<th>Number of Students</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Oman</td>
+				<td>@omanNunber</td>
+			</tr>
+			<tr>
+				<td>UAE</td>
+				<td>@uaeNunber</td>
+			</tr>
+			<tr>
+				<td>KSA</td>
+				<td>@ksaNunber</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<table>
+		<thead>
+			<tr>
+				<th>Average Age of Students</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>@AVGAge</td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+
+@code{
+	int classANunber = 0;
+	int classBNunber = 0;
+	int classCNunber = 0;
+
+	int omanNunber = 0;
+	int uaeNunber = 0;
+	int ksaNunber = 0;
+
+	double AVGAge = 0;
+
+
+	protected override async Task OnInitializedAsync()
+	{
+		List<Student> Students = new List<Student>();
+
+		Students =  DB.getAllStudents();
+		foreach (Student Student in Students)
+		{
+			if (Student.classId == 1)
+			{
+				classANunber += 1;
+
+			}
+			else if (Student.classId == 2)
+			{
+				classBNunber += 1;
+			}
+			else if (Student.classId == 3)
+			{
+				classCNunber += 1;
+			}
+		}
+		foreach (Student Student in Students)
+		{
+			if (Student.cuontyeId == 1)
+			{
+				omanNunber += 1;
+			}
+			else if (Student.cuontyeId == 2)
+			{
+				uaeNunber += 1;
+			}
+			else if (Student.cuontyeId == 3)
+			{
+				ksaNunber += 1;
+			}
+		}
+		DateTime now = DateTime.Now;
+		foreach (Student Student in Students)
+		{
+			
+			TimeSpan time_ = now - Student.dateOfBirth;
+
+			AVGAge += time_.Days/360;
+		}
+
+		AVGAge = AVGAge / Students.Count;
+
+
+	}
+
+}

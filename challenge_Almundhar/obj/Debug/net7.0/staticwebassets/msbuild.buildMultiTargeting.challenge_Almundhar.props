@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\challenge_Almundhar.props" />
+</Project>

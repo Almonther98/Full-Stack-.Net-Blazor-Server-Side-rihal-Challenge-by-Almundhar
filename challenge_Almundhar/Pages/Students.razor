@@ -1,0 +1,157 @@
+﻿@page "/Students"
+@using challenge_Almundhar.Data;
+@inject StudentService studentService;
+@inject DB DB;
+
+
+<h1>Students</h1>
+
+
+<h3>Add New Student:</h3>
+<form>
+    <label>Student ID:</label> <input @bind = "Id" type="number" id="sid" >
+    <label>Class:</label> 
+    <select @bind = "class_" id="classi" >
+        <option value=1>class A</option>
+        <option value=2>class B</option>
+        <option value=3>class C</option>
+    </select>
+   
+    <label>Country:</label>
+    
+    <select @bind="country" id="countryi">
+        <option value=1>Oman</option>
+        <option value=2>UAE</option>
+        <option value=3>KSA</option>
+    </select>
+    <label>Name:</label><input @bind="name" type="text" id="namei">
+    <label>Date of birth:</label><input @bind="dateOfBirth" type="date" id="datei"><br /> <br />
+    <button  type="submit" class="btn btn-dark" @onclick="insertStudent_" value="Add New Student" id="btni">Add New Student</button>
+    <br> <br>
+
+
+    <h3>Update Student Records:</h3>
+   
+
+
+    <label>Student ID:</label> <input type="number" @bind="IdToUpdate" id="sidu">
+    <label>Class:</label>
+    <select @bind="class_ToUpdate" id="classu">
+        <option value=1>class A</option>
+        <option value=2>class B</option>
+        <option value=3>class C</option>
+    </select>
+    <label>Country:</label>
+    <select @bind="countryToUpdate" id="countryu">
+        <option value=1>Oman</option>
+        <option value=2>UAE</option>
+        <option value=3>KSA</option>
+    </select>
+    <label>Name:</label><input type="text" @bind="nameToUpdate" id="nameu">
+    <label>Date of birth:</label><input type="date" @bind="dateOfBirthToUpdate" id="dateu">
+
+
+    <br /> <br /><button type="submit" @onclick="updateStudent_" class="btn btn-dark" value="Update Student " id=" btnu">Update Student </button> <br /> <br />
+
+    <label>Enter Student Id To Delete:</label> <input type="number" @bind="IdToDelete" id="search" />
+
+    <button type="submit" class="btn btn-dark" value="Delete" id="sbtn">Delete</button>
+</form>
+
+<h3><strong><span style="font-size:24px;">Students:</span></strong></h3>
+
+<table  class="table table-striped table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>class</th>
+            <th>cuontry</th>
+            <th>Name</th>
+            <th>Barthday</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (studrntEntry entry in allEntrys)
+        {
+            <tr>
+                <td>
+                    @entry.Id
+                </td>
+                <td>
+                    @entry.classNsme
+                </td>
+                <td>
+                    @entry.cuontyeName
+                </td>
+                <td>
+                    @entry.name
+                </td>
+                <td>
+                    @entry.dateOfBirth.Date.ToShortDateString()
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@code {
+
+    List<studrntEntry> allEntrys = new List<studrntEntry>();
+
+    private int Id { get; set; }
+    private int class_ { get; set; }
+    private int country { get; set; }
+    private string name { get; set; }
+    private DateTime dateOfBirth { get; set; }
+
+    private int IdToUpdate { get; set; }
+    private int class_ToUpdate { get; set; }
+    private int countryToUpdate { get; set; }
+    private string nameToUpdate { get; set; }
+    private DateTime dateOfBirthToUpdate { get; set; }
+
+
+    private int IdToDelete { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+
+        await base.OnInitializedAsync();
+
+
+
+        allEntrys = await studentService.getAllEnteris();
+
+
+    }
+    void insertStudent_()
+    {
+        if ( name != null )
+        {
+            DB.insertStudent(class_, country, name, dateOfBirth);
+        }
+    }
+
+    void updateStudent_()
+    {
+        insertStudent_();
+
+        if (IdToUpdate != null && nameToUpdate != null && dateOfBirthToUpdate != null)
+        {
+
+            DB.updateStudent(IdToUpdate, class_ToUpdate, countryToUpdate, nameToUpdate, dateOfBirthToUpdate);
+        }
+
+    }
+
+    void deleteStudet()
+    {
+        if (IdToDelete != 0)
+        {
+            DB.DeleteStudent(IdToDelete);
+        }
+        
+    }
+
+}
